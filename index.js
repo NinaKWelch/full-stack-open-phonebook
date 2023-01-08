@@ -26,7 +26,7 @@ app.use(express.json())
 // ENDPOINTS
 app.get('/info', (request, response) => {
   const date = new Date()
-  const content = '<p>Phonebook has info for ' + phonebook.length + ' people.</br>' + date + '</p>'
+  const content = '<p>Phonebook has info for ' + Person.length + ' people.</br>' + date + '</p>'
 
   response.send(content)
 })
@@ -73,6 +73,7 @@ app.post('/api/persons', (request, response) => {
     .then((savedAndFormattedPerson) => {
       response.json(savedAndFormattedPerson)
     })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -83,14 +84,28 @@ app.delete('/api/persons/:id', (request, response) => {
     .catch(error => next(error))
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
+})
+
+// ERROR HANDLING
+// handler of requests with unknown endpoint - must be called after data requests
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
-// handler of requests with unknown endpoint
-app.use(unknownEndpoint)
-
-// ERROR HANDLING
+// handler of requests with result to errors - must be the last loaded middleware
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
@@ -101,9 +116,10 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-// this has to be the last loaded middleware
+app.use(unknownEndpoint)
 app.use(errorHandler)
 
+// SERVER
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
