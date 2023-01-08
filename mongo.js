@@ -24,7 +24,7 @@ mongoose
   .catch((err) => console.log(err))
 
 if (process.argv.length === 3) {  
-  Person.find({}).then(result => {
+  Person.find({}).then((result) => {
     console.log('phonebook:')
     result.forEach((person) => {
       console.log(`${person.name} ${person.number}`)
