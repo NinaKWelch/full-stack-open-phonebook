@@ -1,9 +1,11 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 
 // without this json-parser, the body property of post request would be undefined
 app.use(express.json())
+
 // https://github.com/expressjs/morgan
 morgan.token('body', function (request) {
   return JSON.stringify(request.body)
@@ -12,6 +14,9 @@ morgan.token('body', function (request) {
 app.use(morgan(
   ':method :url :status :res[content-length] - :response-time ms :body'
 ))
+
+// https://github.com/expressjs/cors
+app.use(cors())
 
 let phonebook = [
   { 
