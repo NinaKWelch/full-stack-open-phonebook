@@ -6,14 +6,15 @@ const app = express()
 // without this json-parser, the body property of post request would be undefined
 app.use(express.json())
 
+// Removed in case of fly.io 
 // https://github.com/expressjs/morgan
-morgan.token('body', function (request) {
-  return JSON.stringify(request.body)
-})
+// morgan.token('body', function (request) {
+//   return JSON.stringify(request.body)
+// })
 
-app.use(morgan(
-  ':method :url :status :res[content-length] - :response-time ms :body'
-))
+// app.use(morgan(
+//   ':method :url :status :res[content-length] - :response-time ms :body'
+// ))
 
 // https://github.com/expressjs/cors
 app.use(cors())
@@ -101,7 +102,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 8080
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
