@@ -1,8 +1,11 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 // without this json-parser, the body property of post request would be undefined
 app.use(express.json())
+// https://github.com/expressjs/morgan
+app.use(morgan('tiny'))
 
 let phonebook = [
   { 
