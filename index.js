@@ -19,6 +19,8 @@ app.use(express.json())
 // https://github.com/expressjs/cors
 app.use(cors())
 
+app.use(express.static('build'))
+
 let phonebook = [
   { 
     "id": 1,
@@ -43,10 +45,6 @@ let phonebook = [
 ]
 
 const generateId = () => Math.floor(Math.random() * 10000)
-
-app.get('/', (request, response) => {
-  response.send('<h1>Phonebook</h1>')
-})
 
 app.get('/info', (request, response) => {
   const date = new Date()
