@@ -13,7 +13,7 @@ app.use(express.static('build'))
 // without this json-parser, the body property of post request would be undefined
 app.use(express.json())
 
-// Removed in case of fly.io 
+// Removed in case of fly.io
 // https://github.com/expressjs/morgan
 // morgan.token('body', function (request) {
 //   return JSON.stringify(request.body)
@@ -50,18 +50,6 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
- 
-  // if (!body.name || !body.number) {
-  //   return response.status(400).json({ 
-  //     error: 'missing name or number' 
-  //   })
-  // }
-
-  // if (body.name && phonebook.find((person) => person.name === body.name)) {
-  //   return response.status(400).json({ 
-  //     error: 'name must be unique' 
-  //   })
-  // }
 
   const person = new Person({
     name: body.name,
@@ -78,7 +66,8 @@ app.post('/api/persons', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    // eslint-disable-next-line no-unused-vars
+    .then((result) => {
       response.status(204).end()
     })
     .catch(error => next(error))
